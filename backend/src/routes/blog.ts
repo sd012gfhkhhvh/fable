@@ -1,6 +1,12 @@
 import { Hono } from "hono";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+
+import {
+  editBlogHandler,
+  getBlogBulkhandler,
+  getBlogByIdHandler,
+  postBlogHandler,
+} from "../controllers/blogController";
+import { userAuth } from "../middlewares/userAuth";
 
 type Bindings = {
   DATABASE_URL: string;
@@ -9,36 +15,16 @@ type Bindings = {
 const blogRouter = new Hono<{ Bindings: Bindings }>();
 
 blogRouter
-  .post("/", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+  //unprotected routes
+  .get("/bulk", getBlogBulkhandler)
 
-    return c.text("Hello blog!");
-  })
+  //auth middleware
+  .use(userAuth)
+  //protected routes
+  .post("/", postBlogHandler)
 
-  .put("/", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+  .put("/", editBlogHandler)
 
-    return c.text("Hello Hono!");
-  })
-
-  .get("/bulk", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-
-    return c.text("bulk data!");
-  })
-
-  .get("/:id", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-
-    return c.text("Hello Hono!");
-  });
+  .get("/:id", getBlogByIdHandler);
 
 export { blogRouter };

@@ -5,11 +5,8 @@ import { rootRouter } from "./routes";
 // Although DATABASE_URL(secret) is not mentioned in the wrangler.toml file as a variable
 // but it is stored inside the .dev.vars file which is added to the worker(npx wrangler secret put DATABASE_URL)
 // ref(Secrets) - https://developers.cloudflare.com/workers/configuration/secrets/#secrets-in-development
-type Bindings = {
-  DATABASE_URL: string;
-};
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono();
 
 app.use(cors())
 

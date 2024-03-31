@@ -4,11 +4,7 @@ import { Hono } from "hono";
 import { userRouter } from "./user";
 import { blogRouter } from "./blog";
 
-type Bindings = {
-  DATABASE_URL: string;
-};
-
-const rootRouter = new Hono<{ Bindings: Bindings }>();
+const rootRouter = new Hono();
 
 rootRouter.route("/blog", blogRouter);
 rootRouter.route("/user", userRouter);

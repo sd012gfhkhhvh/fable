@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+
+//userController
+import { signinHandler, signupHandler } from "../controllers/userController";
 
 type Bindings = {
   DATABASE_URL: string;
@@ -9,20 +10,8 @@ type Bindings = {
 const userRouter = new Hono<{ Bindings: Bindings }>();
 
 userRouter
-  .post("/signup", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+  .post("/signup", signupHandler)
 
-    return c.text("Hello signup!");
-  })
-
-  .post("/signin", (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-
-    return c.text("Hello signin!");
-  });
+  .post("/signin", signinHandler);
 
 export { userRouter };
