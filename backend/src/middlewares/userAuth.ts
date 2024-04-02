@@ -12,7 +12,7 @@ const userAuth = async (c: any, next: any) => {
 
   try {
     const token = authorization.split(" ")[1];
-    const decodedValue = await verify(token, "JWTsecret");
+    const decodedValue = await verify(token, c.env.JWT_SECRET);
 
     c.set("userId", decodedValue.id);
     await next();

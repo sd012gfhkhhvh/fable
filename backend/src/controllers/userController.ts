@@ -31,7 +31,7 @@ const signupHandler = async (c: any) => {
 
     console.log(user);
 
-    const jwtToken = await sign({ id: user.id }, "JWTsecret");
+    const jwtToken = await sign({ id: user.id }, c.env.JWT_SECRET);
 
     await prisma.$disconnect(); // disconnect prisma client
 
@@ -69,7 +69,7 @@ const signinHandler = async (c: any) => {
     }
 
     //sign the jwt token
-    const token = await sign({ id: user?.id }, "JWTsecret");
+    const token = await sign({ id: user?.id }, c.env.JWT_SECRET);
 
     await prisma.$disconnect(); // disconnect prisma client
 
