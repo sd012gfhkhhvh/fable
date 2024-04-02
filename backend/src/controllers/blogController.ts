@@ -1,10 +1,6 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 
 const postBlogHandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   const { title, content, published } = c.req.json();
 
@@ -34,9 +30,7 @@ const postBlogHandler = async (c: any) => {
 };
 
 const editBlogHandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   const { content } = c.req.json();
   const { blogId } = c.req.param;
@@ -61,12 +55,9 @@ const editBlogHandler = async (c: any) => {
 };
 
 const getBlogByIdHandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   const { blogId } = c.req.param;
-  const authorId = c.get("userId");
 
   try {
     const blog = await prisma.post.findUnique({
@@ -83,9 +74,7 @@ const getBlogByIdHandler = async (c: any) => {
 };
 
 const getBlogBulkhandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   try {
     const blog = await prisma.post.findMany({});

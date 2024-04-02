@@ -1,5 +1,3 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
 
 const isUserExist = async (c: any, prisma: any, email: string) => {
@@ -13,9 +11,7 @@ const isUserExist = async (c: any, prisma: any, email: string) => {
 };
 
 const signupHandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   const { name, email, password } = await c.req.json();
   console.log(name, email, password);
@@ -48,9 +44,7 @@ const signupHandler = async (c: any) => {
 };
 
 const signinHandler = async (c: any) => {
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = c.get("prisma");
 
   const { email, password } = await c.req.json();
 

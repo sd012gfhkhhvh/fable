@@ -4,17 +4,25 @@ import { Hono } from "hono";
 import { userRouter } from "./user";
 import { blogRouter } from "./blog";
 
-type Bindings = {
-  DATABASE_URL: string;
-  JWT_SECRET: string;
+//middlewares
+import { getPrismaClient } from "../middlewares/prismaClient";
+
+type Env = {
+  Bindings: {
+    DATABASE_URL: string;
+    JWT_SECRET: string;
+  };
+  Variables: {
+    userId: number;
+  };
 };
 
-type Variables = {
-  userId: number;
-};
+const rootRouter = new Hono<Env>();
 
-const rootRouter = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+//initiate prisma-client middleware
+rootRouter.use("/*", getPrismaClient);
 
+// routes
 rootRouter.route("/blog", blogRouter);
 rootRouter.route("/user", userRouter);
 
