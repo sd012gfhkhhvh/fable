@@ -8,11 +8,7 @@ import {
 } from "../controllers/blogController";
 import { userAuth } from "../middlewares/userAuth";
 
-type Bindings = {
-  DATABASE_URL: string;
-};
-
-const blogRouter = new Hono<{ Bindings: Bindings }>();
+const blogRouter = new Hono();
 
 blogRouter
   //unprotected routes
@@ -23,7 +19,7 @@ blogRouter
   //protected routes
   .post("/", postBlogHandler)
 
-  .put("/", editBlogHandler)
+  .put("/:blogId", editBlogHandler)
 
   .get("/:id", getBlogByIdHandler);
 

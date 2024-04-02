@@ -3,12 +3,7 @@ import { Hono } from "hono";
 //userController
 import { signinHandler, signupHandler } from "../controllers/userController";
 
-type Bindings = {
-  DATABASE_URL: string;
-  JWT_SECRET: string;
-};
-
-const userRouter = new Hono<{ Bindings: Bindings }>();
+const userRouter = new Hono();
 
 userRouter
   .post("/signup", signupHandler)
