@@ -8,12 +8,10 @@ import {
 } from "../controllers/blogController";
 
 import { userAuth } from "../middlewares/userAuth";
-import { getPrismaClient } from "../middlewares/prismaClient";
 
 const blogRouter = new Hono();
 
 blogRouter
-  // .use(getPrismaClient)
   //unprotected routes
   .get("/bulk", getBlogBulkhandler)
 
