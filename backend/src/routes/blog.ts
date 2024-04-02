@@ -20,7 +20,7 @@ blogRouter
   //protected routes
   .post("/", postBlogHandler)
 
-  .put("/:blogId", editBlogHandler)
+  .put("/", editBlogHandler)
 
   .get("/:id", getBlogByIdHandler);
 

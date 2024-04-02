@@ -1,10 +1,9 @@
-
+// create a new blog
 const postBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
+  const authorId = c.get("userId");
 
   const { title, content, published } = c.req.json();
-
-  const authorId = c.get("userId");
 
   try {
     const post = await prisma.post.create({
@@ -29,17 +28,23 @@ const postBlogHandler = async (c: any) => {
   }
 };
 
+// edit blog post
 const editBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
-
-  const { content } = c.req.json();
-  const { blogId } = c.req.param;
   const authorId = c.get("userId");
+
+  const { title, content, id } = c.req.json();
 
   try {
     const editedBLog = await prisma.post.update({
-      where: { id: blogId, authorId },
-      data: { content },
+      where: {
+        id,
+        authorId,
+      },
+      data: {
+        title,
+        content,
+      },
     });
 
     await prisma.$disconnect();
@@ -54,14 +59,15 @@ const editBlogHandler = async (c: any) => {
   }
 };
 
+//get blog by id
 const getBlogByIdHandler = async (c: any) => {
   const prisma = c.get("prisma");
 
-  const { blogId } = c.req.param;
+  const id = c.req.param("id");
 
   try {
     const blog = await prisma.post.findUnique({
-      where: { id: blogId },
+      where: { id },
     });
 
     await prisma.$disconnect();
@@ -73,14 +79,15 @@ const getBlogByIdHandler = async (c: any) => {
   }
 };
 
+//get bulk blogs
 const getBlogBulkhandler = async (c: any) => {
   const prisma = c.get("prisma");
 
   try {
-    const blog = await prisma.post.findMany({});
+    const blogs = await prisma.post.findMany({});
 
     await prisma.$disconnect();
-    return c.json({ message: "Success", data: blog }, 200);
+    return c.json({ message: "Success", data: blogs }, 200);
   } catch (e: any) {
     console.log(e.message);
     prisma.$disconnect();
