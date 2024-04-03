@@ -1,4 +1,5 @@
 import { sign } from "hono/jwt";
+import { userSigninInput, userSignupInput } from "@soham_das/fable/dist";
 
 const isUserExist = async (c: any, prisma: any, email: string) => {
   const user = await prisma.user.findUnique({
@@ -12,6 +13,13 @@ const isUserExist = async (c: any, prisma: any, email: string) => {
 
 const signupHandler = async (c: any) => {
   const prisma = c.get("prisma");
+
+  //zod input validation
+  const { success } = userSignupInput.safeParse(await c.req.json());
+  if (!success) {
+    console.log("Invalid input ");
+    return c.json({ message: "Invalid input" }, 411);
+  }
 
   const { name, email, password } = await c.req.json();
   console.log(name, email, password);
@@ -45,6 +53,13 @@ const signupHandler = async (c: any) => {
 
 const signinHandler = async (c: any) => {
   const prisma = c.get("prisma");
+
+  //zod input validation
+  const { success } = userSigninInput.safeParse(await c.req.json());
+  if (!success) {
+    console.log("Invalid input");
+    return c.json({ message: "Invalid input" }, 411);
+  }
 
   const { email, password } = await c.req.json();
 

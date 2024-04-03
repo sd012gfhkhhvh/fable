@@ -1,7 +1,16 @@
+import { createPostInput, updatePostInput } from "@soham_das/fable/dist";
+
 // create a new blog
 const postBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
   const authorId = c.get("userId");
+
+  //zod input validation
+  const { success } = createPostInput.safeParse(await c.req.json());
+  if (!success) {
+    console.log("Invalid input ");
+    return c.json({ message: "Invalid input" }, 411);
+  }
 
   const { title, content } = await c.req.json();
 
@@ -31,6 +40,13 @@ const postBlogHandler = async (c: any) => {
 const editBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
   const authorId = c.get("userId");
+
+  //zod input validation
+  const { success } = updatePostInput.safeParse(await c.req.json());
+  if (!success) {
+    console.log("Invalid input ");
+    return c.json({ message: "Invalid input" }, 411);
+  }
 
   const { title, content, id } = await c.req.json();
 
