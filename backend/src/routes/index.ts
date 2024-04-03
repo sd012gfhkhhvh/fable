@@ -14,6 +14,7 @@ type Env = {
   };
   Variables: {
     userId: number;
+    prisma: any;
   };
 };
 

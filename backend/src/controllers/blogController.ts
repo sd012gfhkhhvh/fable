@@ -3,14 +3,13 @@ const postBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
   const authorId = c.get("userId");
 
-  const { title, content, published } = c.req.json();
+  const { title, content } = await c.req.json();
 
   try {
     const post = await prisma.post.create({
       data: {
         title,
         content,
-        published,
         authorId,
       },
     });
@@ -33,7 +32,7 @@ const editBlogHandler = async (c: any) => {
   const prisma = c.get("prisma");
   const authorId = c.get("userId");
 
-  const { title, content, id } = c.req.json();
+  const { title, content, id } = await c.req.json();
 
   try {
     const editedBLog = await prisma.post.update({
@@ -63,11 +62,14 @@ const editBlogHandler = async (c: any) => {
 const getBlogByIdHandler = async (c: any) => {
   const prisma = c.get("prisma");
 
-  const id = c.req.param("id");
+  const id = await c.req.param("id");
+  // console.log(id);
 
   try {
     const blog = await prisma.post.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
     });
 
     await prisma.$disconnect();
@@ -75,7 +77,7 @@ const getBlogByIdHandler = async (c: any) => {
   } catch (e: any) {
     console.log(e.message);
     prisma.$disconnect();
-    return c.json({ message: "error editing", error: e }, 403);
+    return c.json({ message: "error geting blog post", error: e }, 403);
   }
 };
 
@@ -91,7 +93,7 @@ const getBlogBulkhandler = async (c: any) => {
   } catch (e: any) {
     console.log(e.message);
     prisma.$disconnect();
-    return c.json({ message: "error editing", error: e }, 403);
+    return c.json({ message: "error geting blog", error: e }, 403);
   }
 };
 

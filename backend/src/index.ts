@@ -20,7 +20,7 @@ app.all("*", (c) => {
 
 //error handling middleware
 app.onError((err, c) => {
-  return c.json({message: err.message});
+  return c.json({message:"server broke", error: err}, 500);
 })
 
 export default app;

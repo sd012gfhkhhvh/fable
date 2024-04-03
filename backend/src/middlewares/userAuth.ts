@@ -6,8 +6,8 @@ const userAuth = async (c: any, next: any) => {
   console.log("auth middleware passed");
   const authorization = c.req.header("authorization");
 
-  if (!authorization || authorization.startsWith("Bearer ")) {
-    return c.json({ message: "Not a valid token" }, 403);
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return c.json({ message: "Not a valid token1" }, 403);
   }
 
   try {
